@@ -44,12 +44,10 @@ void *arenaRealloc(struct arena *arena, void *oldPtr, size_t oldSize,
   size_t alignedOld = ALIGN(oldSize);
   size_t alignedNew = ALIGN(newSize);
 
-  /* Shrink – always succeeds, nothing to do */
   if (alignedNew <= alignedOld) {
     return oldPtr;
   }
 
-  /* If oldPtr is the most recent allocation, try to extend in place */
   void *frontier = (char *)arena->base + arena->offset;
   void *oldEnd = (char *)oldPtr + alignedOld;
   if (oldEnd == frontier) {
@@ -58,7 +56,7 @@ void *arenaRealloc(struct arena *arena, void *oldPtr, size_t oldSize,
       arena->offset += extra;
       return oldPtr;
     }
-    return NULL; /* can't grow */
+    return NULL;
   }
 
   /* General case – allocate + copy */
