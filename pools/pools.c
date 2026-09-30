@@ -17,7 +17,6 @@ struct pool {
 };
 
 int poolInit(struct pool *pool, size_t chunkCount, size_t chunkSize) {
-  /* Each chunk must be large enough to hold a poolNode for the free list. */
   if (chunkSize < sizeof(struct poolNode)) {
     chunkSize = sizeof(struct poolNode);
   }
@@ -36,10 +35,8 @@ int poolInit(struct pool *pool, size_t chunkCount, size_t chunkSize) {
   pool->chunkSize = chunkSize;
   pool->head = NULL;
 
-  /* Thread every chunk into the free list. */
   for (size_t i = 0; i < chunkCount; i++) {
-    struct poolNode *node =
-        (struct poolNode *)(pool->base + i * chunkSize);
+    struct poolNode *node = (struct poolNode *)(pool->base + i * chunkSize);
     node->next = pool->head;
     pool->head = node;
   }
@@ -49,10 +46,8 @@ int poolInit(struct pool *pool, size_t chunkCount, size_t chunkSize) {
 
 void poolFreeAll(struct pool *pool) {
   pool->head = NULL;
-
   size_t chunkCount = pool->poolLen / pool->chunkSize;
 
-  /* Re-thread every chunk back into the free list. */
   for (size_t i = 0; i < chunkCount; i++) {
     struct poolNode *node =
         (struct poolNode *)(pool->base + i * pool->chunkSize);

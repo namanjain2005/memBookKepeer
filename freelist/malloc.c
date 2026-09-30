@@ -15,6 +15,8 @@
 //
 // also think about concurrency making it to be a thread or CPU local
 
+// there is also an idea of red black tree
+
 #define ALIGNMENT 16
 #define ALIGN(size) (((size) + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1))
 
@@ -25,7 +27,8 @@ struct memMeta {
   int free;
 };
 
-_Static_assert(sizeof(struct memMeta) % ALIGNMENT == 0, "METASIZE must be a multiple of ALIGNMENT");
+_Static_assert(sizeof(struct memMeta) % ALIGNMENT == 0,
+               "METASIZE must be a multiple of ALIGNMENT");
 
 size_t METASIZE = sizeof(struct memMeta);
 
